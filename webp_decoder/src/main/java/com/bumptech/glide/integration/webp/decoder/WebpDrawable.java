@@ -70,6 +70,7 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
     private boolean applyGravity;
     private Paint paint;
     private Rect destRect;
+    private onAnimatorListener mListener;
 
     public WebpDrawable(Context context, GifDecoder gifDecoder, BitmapPool bitmapPool,
            Transformation<Bitmap> frameTransformation, int targetFrameWidth, int targetFrameHeight,
@@ -147,6 +148,9 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
     public void stop() {
         isStarted = false;
         stopRunning();
+        if (mListener!=null){
+            mListener.onAnimatorEnd();
+        }
     }
 
     private void startRunning() {
@@ -264,6 +268,14 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
     public void recycle() {
         isRecycled = true;
         state.frameLoader.clear();
+    }
+
+    public interface  onAnimatorListener{
+        void onAnimatorEnd();
+    }
+
+    public void setAnimatorListener(onAnimatorListener listener){
+        mListener = listener;
     }
 
     boolean isRecycled() {

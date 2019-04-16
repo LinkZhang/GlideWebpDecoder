@@ -88,6 +88,27 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
                 .load(url)
                 .placeholder(R.drawable.image_loading)
                 .error(R.drawable.image_error)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if (resource instanceof WebpDrawable){
+                            ((WebpDrawable) resource).setLoopCount(1);
+                            ((WebpDrawable) resource).setAnimatorListener(new WebpDrawable.onAnimatorListener() {
+                                @Override
+                                public void onAnimatorEnd() {
+
+                                }
+                            });
+                        }
+
+                        return false;
+                    }
+                })
                 .into(imageView);
     }
 
